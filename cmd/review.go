@@ -22,6 +22,7 @@ import (
 
 	"github.com/google/pullsheet/pkg/client"
 	"github.com/google/pullsheet/pkg/print"
+	"github.com/google/pullsheet/pkg/repo"
 )
 
 // reviewsCmd represents the subcommand for `pullsheet reviews`
@@ -46,7 +47,18 @@ func runReviews(rootOpts *rootOptions) error {
 		return err
 	}
 
-	data, err := summary.Reviews(ctx, c, rootOpts.repos, rootOpts.users, rootOpts.sinceParsed, rootOpts.untilParsed)
+	var repos []string
+
+	if len(rootOpts.org) > 0 {
+		repos, err = repo.ListRepoNames(ctx, c, rootOpts.org)
+		if err != nil {
+			return err
+		}
+	} else {
+		repos = rootOpts.repos
+	}
+
+	data, err := summary.Reviews(ctx, c, repos, rootOpts.users, rootOpts.sinceParsed, rootOpts.untilParsed)
 	if err != nil {
 		return err
 	}
