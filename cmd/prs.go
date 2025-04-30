@@ -49,8 +49,8 @@ func runPRs(rootOpts *rootOptions) error {
 
 	var repos []string
 
-	if len(rootOpts.org) > 0 {
-		repos, err = repo.ListRepoNames(ctx, c, rootOpts.org)
+	if rootOpts.org != "" {
+		repos, _ = repo.ListRepoNames(ctx, c, rootOpts.org)
 	} else {
 		repos = rootOpts.repos
 	}
@@ -61,7 +61,6 @@ func runPRs(rootOpts *rootOptions) error {
 	}
 
 	err = print.Print(data, rootOpts.out)
-
 	if err != nil {
 		return err
 	}
